@@ -1,0 +1,98 @@
+package sebastiancorradi.altran.model;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Gregorio on 12/3/2017.
+ */
+
+public class Gnome implements Parcelable {
+
+    int id;
+
+    @SerializedName("name")
+    String name;
+
+    @SerializedName("thumbnail")
+    String thumbnail;
+
+    @SerializedName("age")
+    int age;
+
+    @SerializedName("weight")
+    float weight;
+
+    @SerializedName("height")
+    float height;
+
+    @SerializedName("hair_color")
+    String hair_color;
+
+    @SerializedName("professions")
+    List<String> professions;
+
+    @SerializedName("friends")
+    List<String> friends;
+
+
+    public static final Creator<Gnome> CREATOR = new Creator<Gnome>() {
+        @Override
+        public Gnome createFromParcel(Parcel in) {
+            return new Gnome(in);
+        }
+
+        @Override
+        public Gnome[] newArray(int size) {
+            return new Gnome[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(this.id);
+        parcel.writeString(this.name);
+        parcel.writeString(this.thumbnail);
+        parcel.writeInt(this.age);
+        parcel.writeFloat(this.weight);
+        parcel.writeFloat(this.height);
+        parcel.writeString(this.hair_color);
+        parcel.writeStringList(this.professions);
+        parcel.writeStringList(this.friends);
+    }
+
+    public Gnome(Parcel in){
+        this.id = in.readInt();
+        this.name = in.readString();
+        this.thumbnail =  in.readString();
+        this.age = in.readInt();
+        this.weight = in.readFloat();
+        this.height = in.readFloat();
+        this.hair_color = in.readString();
+        this.professions = new ArrayList<String>();
+        in.readStringList(this.professions);
+        this.friends = new ArrayList<String>();
+        in.readStringList(this.friends);
+        //in.readStringList(this.professions);
+        //in.readStringList(this.friends);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}

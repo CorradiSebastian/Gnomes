@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Altran</string>
+    <string name="gnomes_details_url">https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json</string>
+</resources>
+
