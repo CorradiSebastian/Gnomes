@@ -1,4 +1,4 @@
-package sebastiancorradi.altran.adapters;
+package sebastiancorradi.altran.presenters.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import sebastiancorradi.altran.R;
 import sebastiancorradi.altran.model.Gnome;

@@ -3,7 +3,7 @@ package sebastiancorradi.altran.RequestManager;
 import android.content.Context;
 
 import sebastiancorradi.altran.R;
-import sebastiancorradi.altran.VolleyRequestManager.VolleyRequestManager;
+import sebastiancorradi.altran.RequestManager.VolleyRequestManager.VolleyRequestManager;
 
 /**
  * Created by Gregorio on 12/1/2017.

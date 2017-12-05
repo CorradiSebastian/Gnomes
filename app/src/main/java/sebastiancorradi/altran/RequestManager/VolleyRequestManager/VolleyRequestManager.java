@@ -1,4 +1,4 @@
-package sebastiancorradi.altran.VolleyRequestManager;
+package sebastiancorradi.altran.RequestManager.VolleyRequestManager;
 
 import android.content.Context;
 

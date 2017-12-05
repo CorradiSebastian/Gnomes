@@ -1,4 +1,4 @@
-package sebastiancorradi.altran.parsers;
+package sebastiancorradi.altran.interactors.parsers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

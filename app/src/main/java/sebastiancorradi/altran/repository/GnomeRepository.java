@@ -1,14 +1,10 @@
 package sebastiancorradi.altran.repository;
 
-import android.content.Context;
-
 import java.util.ArrayList;
 
-import sebastiancorradi.altran.RequestManager.RequestManager;
-import sebastiancorradi.altran.RequestManager.iResponseListener;
 import sebastiancorradi.altran.model.Brastlewark;
 import sebastiancorradi.altran.model.Gnome;
-import sebastiancorradi.altran.parsers.GnomesParser;
+import sebastiancorradi.altran.interactors.parsers.GnomesParser;
 
 /**
  * Created by Gregorio on 12/3/2017.
