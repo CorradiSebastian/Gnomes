@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import sebastiancorradi.altran.R;
+import sebastiancorradi.altran.Utils.Utils;
 import sebastiancorradi.altran.model.Gnome;
 
 /**
@@ -46,7 +47,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
         //con el name del group busco en el hashmap de childs
-        final String childText = _listDataChild.get(_listDataHeader.get(groupPosition).getName()).getName();
+        Gnome gnome = _listDataChild.get(_listDataHeader.get(groupPosition).getName());
+        //final String childText = _listDataChild.get(_listDataHeader.get(groupPosition).getName()).getName();
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -54,10 +56,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.list_item, null);
         }
 
-        TextView txtListChild = (TextView) convertView
-                .findViewById(R.id.lblListItem);
+        TextView tvHeight = (TextView) convertView.findViewById(R.id.tvHeight);
+        TextView tvWeight = (TextView) convertView.findViewById(R.id.tvWeight);
+        TextView tvHairColor = (TextView) convertView.findViewById(R.id.tvHairColor);
+        TextView tvProfessions = (TextView) convertView.findViewById(R.id.tvProfessions);
+        TextView tvFriends = (TextView) convertView.findViewById(R.id.tvFriends);
 
-        txtListChild.setText(childText);
+
+        tvHeight.setText(String.format("%.2f", gnome.getHeight()));
+        tvWeight.setText(String.format("%.2f", gnome.getWeight()));
+        tvHairColor.setText(gnome.getHair_color());
+        tvProfessions.setText(Utils.join(",  ", gnome.getProfessions()));
+        tvFriends.setText(Utils.join(",  ", gnome.getFriends()));
+
         return convertView;
     }
 
@@ -90,12 +101,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_group, null);
         }
+        String headerSubTitle = convertView.getResources().getString(R.string.label_age) + String.valueOf(((Gnome) getGroup(groupPosition)).getAge());
 
         TextView lblListHeader = (TextView) convertView
                 .findViewById(R.id.lblListHeader);
-        lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
 
+        TextView lblListSubHeader = (TextView) convertView
+                .findViewById(R.id.lblListSubHeader);
+        lblListSubHeader.setText(headerSubTitle);
         return convertView;
     }
 

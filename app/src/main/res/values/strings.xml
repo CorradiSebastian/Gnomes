@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">Altran</string>
     <string name="gnomes_details_url">https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json</string>
+
+    <string name="label_age">Age:\u0020</string>
+    <string name="label_height">Height:\u0020</string>
+    <string name="label_weight">Age:\u0020</string>
+    <string name="label_hair_color">Hair color:\u0020</string>
+    <string name="label_professions">Professions:\u0020</string>
+    <string name="label_friends">Friends:\u0020</string>
+
+
 </resources>
 

@@ -95,4 +95,52 @@ public class Gnome implements Parcelable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(float weight) {
+        this.weight = weight;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public String getHair_color() {
+        return hair_color;
+    }
+
+    public void setHair_color(String hair_color) {
+        this.hair_color = hair_color;
+    }
+
+    public List<String> getProfessions() {
+        return professions;
+    }
+
+    public void setProfessions(List<String> professions) {
+        this.professions = professions;
+    }
+
+    public List<String> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<String> friends) {
+        this.friends = friends;
+    }
 }
