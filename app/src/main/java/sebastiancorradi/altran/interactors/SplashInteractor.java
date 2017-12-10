@@ -2,9 +2,12 @@ package sebastiancorradi.altran.interactors;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+
 import sebastiancorradi.altran.RequestManager.RequestManager;
 import sebastiancorradi.altran.RequestManager.iResponseListener;
 import sebastiancorradi.altran.SQL.AltranDBHelper;
+import sebastiancorradi.altran.model.Gnome;
 import sebastiancorradi.altran.presenters.SplashPresenter;
 import sebastiancorradi.altran.repository.GnomeRepository;
 
@@ -25,6 +28,7 @@ public class SplashInteractor {
                 GnomeRepository.getInstance().setData(response);
                 DBInteractor dbInteractor = DBInteractor.getInstance(context);
                 dbInteractor.insertAll(GnomeRepository.getInstance().getGnomeList());
+                //ArrayList<Gnome> hairColor = dbInteractor.getGnomesByHairColor("Red");
                 presenter.gnomesDataLoaded();
             }
 

@@ -21,6 +21,16 @@ public class DBInteractor {
         dbHelper = AltranDBHelper.getInstance(context);
     }
     private static DBInteractor instance;
+    String[] projection = {
+            AltranDBHelper.COLUMN_GNOME_ID,
+            AltranDBHelper.COLUMN_NAME,
+            AltranDBHelper.COLUMN_AGE,
+            AltranDBHelper.COLUMN_HEIGHT,
+            AltranDBHelper.COLUMN_WEIGHT,
+            AltranDBHelper.COLUMN_HAIRCOLOR,
+            AltranDBHelper.COLUMN_PROFESSIONS,
+            AltranDBHelper.COLUMN_FRIENDS,
+    };
 
     public static DBInteractor getInstance(Context context){
         if (instance == null){
@@ -51,19 +61,6 @@ public class DBInteractor {
     }
 
     public ArrayList<Gnome> getAll(){
-        // Define a projection that specifies which columns from the database
-// you will actually use after this query.
-        String[] projection = {
-                AltranDBHelper.COLUMN_GNOME_ID,
-                AltranDBHelper.COLUMN_NAME,
-                AltranDBHelper.COLUMN_AGE,
-                AltranDBHelper.COLUMN_HEIGHT,
-                AltranDBHelper.COLUMN_WEIGHT,
-                AltranDBHelper.COLUMN_HAIRCOLOR,
-                AltranDBHelper.COLUMN_PROFESSIONS,
-                AltranDBHelper.COLUMN_FRIENDS,
-        };
-        
         String selection = null;
         String[] selectionArgs = null;
 
@@ -84,22 +81,13 @@ public class DBInteractor {
             while (!c.isAfterLast()){
                 Gnome gnome = createFromCursor(c);
                 result.add(gnome);
+                c.moveToNext();
             }
         }
         return result;
     }
 
     public Gnome getGnome(int gnomeId){
-        String[] projection = {
-                AltranDBHelper.COLUMN_GNOME_ID,
-                AltranDBHelper.COLUMN_NAME,
-                AltranDBHelper.COLUMN_AGE,
-                AltranDBHelper.COLUMN_HEIGHT,
-                AltranDBHelper.COLUMN_WEIGHT,
-                AltranDBHelper.COLUMN_HAIRCOLOR,
-                AltranDBHelper.COLUMN_PROFESSIONS,
-                AltranDBHelper.COLUMN_FRIENDS,
-        };
 
         String selection = AltranDBHelper.COLUMN_GNOME_ID + " = ?";
         String[] selectionArgs = {String.valueOf(gnomeId)};
@@ -115,7 +103,6 @@ public class DBInteractor {
                 sortOrder                                 // The sort order
         );
         Gnome gnome = null;
-        ArrayList<Gnome> result = new ArrayList<Gnome>();
         if (c.moveToFirst()) {
                 gnome = createFromCursor(c);
         }
@@ -124,7 +111,7 @@ public class DBInteractor {
     }
 
     public boolean gnomeExists(int gnomeId){
-        String[] projection = {
+        String[] customProjection = {
                 AltranDBHelper.COLUMN_GNOME_ID,
         };
 
@@ -136,7 +123,7 @@ public class DBInteractor {
 
         Cursor c = dbHelper.query(
                 AltranDBHelper.TABLE_NAME,                     // The table to query
-                projection,                               // The columns to return
+                customProjection,                               // The columns to return
                 selection,                                // The columns for the WHERE clause
                 selectionArgs,                            // The values for the WHERE clause
                 sortOrder                                 // The sort order
@@ -154,6 +141,40 @@ public class DBInteractor {
             insert(gnomes.get(i));
         }
 
+    }
+
+    public ArrayList<Gnome> getGnomesByHairColor(String hairColor){
+        String columns[] = {AltranDBHelper.COLUMN_HAIRCOLOR};
+        String values[] = {hairColor};
+        return getGnomesByColumn(columns, values);
+    }
+
+    public ArrayList<Gnome> getGnomesByColumn(String[] columns, String[] selectionArgs){
+        String selection = "";
+        for (String column: columns){
+            selection = column + " = ? AND ";
+        }
+        selection = selection.substring(0, selection.lastIndexOf("AND "));
+
+        String sortOrder =
+                AltranDBHelper.COLUMN_NAME + " ASC";
+
+        Cursor c = dbHelper.query(
+                AltranDBHelper.TABLE_NAME,                     // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                sortOrder                                 // The sort order
+        );
+        ArrayList<Gnome> result = new ArrayList<Gnome>();
+        if (c.moveToFirst()) {
+            while (!c.isAfterLast()){
+                result.add(createFromCursor(c));
+                c.moveToNext();
+            }
+        }
+
+        return result;
     }
 
     private Gnome createFromCursor(Cursor c){
