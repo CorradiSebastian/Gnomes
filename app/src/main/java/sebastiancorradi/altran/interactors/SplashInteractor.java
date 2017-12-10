@@ -4,6 +4,7 @@ import android.content.Context;
 
 import sebastiancorradi.altran.RequestManager.RequestManager;
 import sebastiancorradi.altran.RequestManager.iResponseListener;
+import sebastiancorradi.altran.SQL.AltranDBHelper;
 import sebastiancorradi.altran.presenters.SplashPresenter;
 import sebastiancorradi.altran.repository.GnomeRepository;
 
@@ -17,11 +18,13 @@ public class SplashInteractor {
         this.presenter = presenter;
     }
 
-    public void getGnomesData(Context context){
+    public void getGnomesData(final Context context){
         RequestManager.getInstance().doGnomeDetailsRequest(context, new iResponseListener() {
             @Override
             public void onResponseSuccess(String response) {
                 GnomeRepository.getInstance().setData(response);
+                DBInteractor dbInteractor = DBInteractor.getInstance(context);
+                dbInteractor.insertAll(GnomeRepository.getInstance().getGnomeList());
                 presenter.gnomesDataLoaded();
             }
 

@@ -41,6 +41,7 @@ public class Gnome implements Parcelable {
     @SerializedName("friends")
     List<String> friends;
 
+    boolean visible = true;
 
     public static final Creator<Gnome> CREATOR = new Creator<Gnome>() {
         @Override
@@ -86,6 +87,10 @@ public class Gnome implements Parcelable {
         in.readStringList(this.friends);
         //in.readStringList(this.professions);
         //in.readStringList(this.friends);
+    }
+
+    public Gnome(){
+        super();
     }
 
     public String getName() {
@@ -142,5 +147,21 @@ public class Gnome implements Parcelable {
 
     public void setFriends(List<String> friends) {
         this.friends = friends;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="gnomes_details_url">https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json</string>
+</resources>

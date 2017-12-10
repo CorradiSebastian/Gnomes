@@ -22,19 +22,15 @@ import sebastiancorradi.altran.model.Gnome;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context _context;
     private ArrayList<Gnome> _listDataHeader; // header titles
-    // child data in format of header title, child title
-    private HashMap<String, Gnome> _listDataChild;
 
-    public ExpandableListAdapter(Context context, ArrayList<Gnome> listDataHeader,
-                                 HashMap<String, Gnome> listChildData) {
+    public ExpandableListAdapter(Context context, ArrayList<Gnome> listDataHeader) {
         this._context = context;
         this._listDataHeader = listDataHeader;
-        this._listDataChild = listChildData;
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
-        return this._listDataChild.get(this._listDataHeader.get(groupPosition).getName());
+        return this._listDataHeader.get(groupPosition);
     }
 
     @Override
@@ -47,8 +43,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
         //con el name del group busco en el hashmap de childs
-        Gnome gnome = _listDataChild.get(_listDataHeader.get(groupPosition).getName());
-        //final String childText = _listDataChild.get(_listDataHeader.get(groupPosition).getName()).getName();
+        Gnome gnome = _listDataHeader.get(groupPosition);
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -95,7 +90,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        String headerTitle = ((Gnome) getGroup(groupPosition)).getName();
+        Gnome gnome = (Gnome) getGroup(groupPosition);
+        String headerTitle = gnome.getName();
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -110,6 +106,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView lblListSubHeader = (TextView) convertView
                 .findViewById(R.id.lblListSubHeader);
         lblListSubHeader.setText(headerSubTitle);
+
         return convertView;
     }
 
