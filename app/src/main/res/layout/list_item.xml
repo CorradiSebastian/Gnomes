@@ -145,12 +145,12 @@
                 android:src="@drawable/ngomo6"
                 android:scaleType="centerInside"/>
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="150dp"
-                    android:src="@drawable/pelo"
-                    android:tint="#FF0000"
-                    android:scaleType="centerInside"/>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="150dp"
+                android:src="@drawable/pelo"
+                android:tint="#FF0000"
+                android:scaleType="centerInside"/>
 
             </RelativeLayout>
         </LinearLayout>

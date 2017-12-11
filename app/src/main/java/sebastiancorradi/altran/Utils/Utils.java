@@ -1,6 +1,12 @@
 package sebastiancorradi.altran.Utils;
 
+import android.content.Context;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import sebastiancorradi.altran.R;
 
 /**
  * Created by Gregorio on 12/7/2017.
@@ -37,5 +43,16 @@ public class Utils {
 
     public void setToken(String token) {
         Token = token;
+    }
+
+    public Map<String, Integer> getMapColor(Context context){
+        Map<String, Integer> result = new HashMap<String, Integer>();
+        result.put(context.getResources().getString(R.string.color_black), context.getResources().getColor(R.color.colorBlack));
+        result.put(context.getResources().getString(R.string.color_red), context.getResources().getColor(R.color.colorRed));
+        result.put(context.getResources().getString(R.string.color_gray), context.getResources().getColor(R.color.colorGray));
+        result.put(context.getResources().getString(R.string.color_green), context.getResources().getColor(R.color.colorGreen));
+        result.put(context.getResources().getString(R.string.color_pink), context.getResources().getColor(R.color.colorPink));
+
+        return result;
     }
 }

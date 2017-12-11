@@ -9,5 +9,19 @@
     <string name="label_friends">Friends:\u0020</string>
     <string name="search_hint">Search</string>
 
+    <string name="label_All">All</string>
+    <string name="color_red">Red</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_gray">Gray</string>
+    <string name="color_green">Green</string>
+    <string name="color_black">Black</string>
+    <string-array name="hair_color_array">
+        <item>@string/label_All</item>
+        <item>@string/color_pink</item>
+        <item>@string/color_red</item>
+        <item>@string/color_gray</item>
+        <item>@string/color_black</item>
+        <item>@string/color_green</item>
+    </string-array>
 </resources>
 

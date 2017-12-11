@@ -32,7 +32,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
@@ -42,9 +42,15 @@
             android:layout_width="46dp"
             android:layout_height="46dp"
             android:src="@drawable/ngomo6"
-            android:scaleType="centerInside"
-            android:background="#FFFFFF"/>
+            android:scaleType="centerInside"/>
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/ivHairColor"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:src="@drawable/pelo"
+            android:scaleType="centerInside"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -1,15 +1,20 @@
 package sebastiancorradi.altran.presenters.adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import sebastiancorradi.altran.R;
 import sebastiancorradi.altran.Utils.Utils;
@@ -22,10 +27,16 @@ import sebastiancorradi.altran.model.Gnome;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context _context;
     private ArrayList<Gnome> _listDataHeader; // header titles
+    private Map<String, Integer> mapColors;
 
     public ExpandableListAdapter(Context context, ArrayList<Gnome> listDataHeader) {
         this._context = context;
         this._listDataHeader = listDataHeader;
+        mapColors = Utils.getInstance().getMapColor(context);
+    }
+
+    public void setList(ArrayList<Gnome> newGnomesList){
+        this._listDataHeader = newGnomesList;
     }
 
     @Override
@@ -93,9 +104,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         Gnome gnome = (Gnome) getGroup(groupPosition);
         String headerTitle = gnome.getName();
         if (convertView == null) {
-            LayoutInflater infalInflater = (LayoutInflater) this._context
+            LayoutInflater inflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.list_group, null);
+            convertView = inflater.inflate(R.layout.list_group, null);
         }
         String headerSubTitle = convertView.getResources().getString(R.string.label_age) + String.valueOf(((Gnome) getGroup(groupPosition)).getAge());
 
@@ -107,6 +118,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.lblListSubHeader);
         lblListSubHeader.setText(headerSubTitle);
 
+        ImageView ivHair = (ImageView) convertView.findViewById(R.id.ivHairColor);
+        try {
+            ivHair.setColorFilter(mapColors.get(gnome.getHair_color()));
+        }
+        catch (Exception e){
+            Log.d("ExpAdapter", "map: " + mapColors);
+            Log.d("ExpAdapter", "gnome.getHair_color(): " + gnome.getHair_color());
+            Log.d("ExpAdapter", "mapColors.get(gnome.getHair_color()): " + mapColors.get(gnome.getHair_color()));
+
+        }
         return convertView;
     }
 

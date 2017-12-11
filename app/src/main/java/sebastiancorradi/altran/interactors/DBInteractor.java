@@ -3,6 +3,7 @@ package sebastiancorradi.altran.interactors;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ import sebastiancorradi.altran.model.Gnome;
 
 public class DBInteractor {
     private AltranDBHelper dbHelper;
+    private String colors;
 
     private DBInteractor(Context context){
         dbHelper = AltranDBHelper.getInstance(context);
@@ -137,10 +139,10 @@ public class DBInteractor {
         }
     }
     public void insertAll(ArrayList<Gnome> gnomes){
+        colors = "";
         for (int i = 0; i < gnomes.size(); i++){
             insert(gnomes.get(i));
         }
-
     }
 
     public ArrayList<Gnome> getGnomesByHairColor(String hairColor){
