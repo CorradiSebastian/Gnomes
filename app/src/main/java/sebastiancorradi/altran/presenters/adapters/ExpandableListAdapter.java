@@ -3,6 +3,8 @@ package sebastiancorradi.altran.presenters.adapters;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,6 +77,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView tvHairColor = (TextView) convertView.findViewById(R.id.tvHairColor);
         TextView tvProfessions = (TextView) convertView.findViewById(R.id.tvProfessions);
         TextView tvFriends = (TextView) convertView.findViewById(R.id.tvFriends);
+        ImageView ivGnome = (ImageView) convertView.findViewById(R.id.ivGnome);
+        final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.pbGnomeImage);
+        progressBar.setVisibility(View.VISIBLE);
 
 
         tvHeight.setText(String.format("%.2f", gnome.getHeight()));
@@ -74,6 +87,26 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         tvHairColor.setText(gnome.getHair_color());
         tvProfessions.setText(Utils.join(",  ", gnome.getProfessions()));
         tvFriends.setText(Utils.join(",  ", gnome.getFriends()));
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.error(R.drawable.warning);
+        Glide.with(_context)
+                .setDefaultRequestOptions(requestOptions)
+                .load(gnome.getThumbnail())
+                .listener(new RequestListener<Drawable>() {
+
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .into(ivGnome);
 
         return convertView;
     }
@@ -119,15 +152,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         lblListSubHeader.setText(headerSubTitle);
 
         ImageView ivHair = (ImageView) convertView.findViewById(R.id.ivHairColor);
-        try {
-            ivHair.setColorFilter(mapColors.get(gnome.getHair_color()));
-        }
-        catch (Exception e){
-            Log.d("ExpAdapter", "map: " + mapColors);
-            Log.d("ExpAdapter", "gnome.getHair_color(): " + gnome.getHair_color());
-            Log.d("ExpAdapter", "mapColors.get(gnome.getHair_color()): " + mapColors.get(gnome.getHair_color()));
 
-        }
+        ivHair.setColorFilter(mapColors.get(gnome.getHair_color()));
+
         return convertView;
     }
 

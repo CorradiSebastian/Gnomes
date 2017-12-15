@@ -3,19 +3,23 @@ package sebastiancorradi.altran.SQL;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by Gregorio on 12/9/2017.
  */
 
 public class AltranDBHelper extends SQLiteOpenHelper {
+    private static String TAG = "AltranDBHelper";
 
     public static final String TABLE_NAME = "altran";
     public static final String TABLE_ID = "id";
     public static final String COLUMN_GNOME_ID = "gnome_id";
     public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_THUMBNAIL = "thumbnail";
     public static final String COLUMN_AGE = "age";
     public static final String COLUMN_HEIGHT = "height";
     public static final String COLUMN_WEIGHT = "weight";
@@ -29,8 +33,9 @@ public class AltranDBHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TABLE_NAME + " (" +
                     TABLE_ID + " INTEGER PRIMARY KEY," +
-                    COLUMN_GNOME_ID + INT_TYPE + COMMA_SEP +
+                    COLUMN_GNOME_ID + INT_TYPE + " UNIQUE" + COMMA_SEP +
                     COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
+                    COLUMN_THUMBNAIL + TEXT_TYPE + COMMA_SEP +
                     COLUMN_AGE + INT_TYPE + COMMA_SEP +
                     COLUMN_HEIGHT + TEXT_TYPE + COMMA_SEP +
                     COLUMN_WEIGHT + TEXT_TYPE + COMMA_SEP +
@@ -43,7 +48,7 @@ public class AltranDBHelper extends SQLiteOpenHelper {
 
 
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "altran.db";
 
     private static AltranDBHelper instance;
@@ -75,12 +80,25 @@ public class AltranDBHelper extends SQLiteOpenHelper {
 
     public long insert(String tableName, ContentValues values) {
         SQLiteDatabase db = getWritableDatabase();
-        return db.insert(tableName, null, values);
+        long result = db.insert(tableName, null, values);
+        return result;
+    }
+    public long insertOrThrow(String tableName, ContentValues values) {
+        SQLiteDatabase db = getWritableDatabase();
+        long result = 0;
+        try {
+            result = db.insertOrThrow(tableName, null, values);
+        }
+        catch (SQLiteConstraintException e) {
+            Log.d(TAG, "Gnome ID duplicated");
+        }
+        return result;
     }
 
     public Cursor query(String tableName, String[] projection, String selection, String[] selectionArgs, String sortOrder){
         SQLiteDatabase db = getWritableDatabase();
-        return db.query(tableName, projection, selection, selectionArgs, null, null, sortOrder);
+        Cursor result = db.query(tableName, projection, selection, selectionArgs, null, null, sortOrder);
+        return  result;
     }
 
 

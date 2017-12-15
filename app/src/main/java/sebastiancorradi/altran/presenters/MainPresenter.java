@@ -1,6 +1,7 @@
 package sebastiancorradi.altran.presenters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
@@ -14,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ import java.util.HashMap;
 import sebastiancorradi.altran.R;
 import sebastiancorradi.altran.activities.MainActivity;
 import sebastiancorradi.altran.interactors.DBInteractor;
+import sebastiancorradi.altran.interactors.MainInteractor;
 import sebastiancorradi.altran.presenters.adapters.ExpandableListAdapter;
 import sebastiancorradi.altran.model.Gnome;
 import sebastiancorradi.altran.repository.GnomeRepository;
@@ -33,7 +37,8 @@ import sebastiancorradi.altran.repository.GnomeRepository;
 public class MainPresenter {
     private final String TAG = "MainPresenter";
     //private ArrayList<Gnome> gnomesList;
-    public MainActivity mainView;
+    private MainActivity mainView;
+    private MainInteractor mainInteractor;
     private ExpandableListView expListView;
     private ExpandableListAdapter listAdapter;
     private ArrayList<Gnome> listGnomesHeader; // header titles
@@ -43,6 +48,7 @@ public class MainPresenter {
 
     public MainPresenter(MainActivity activity){
         this.mainView = activity;
+        mainInteractor = new MainInteractor(this);
         Log.d(TAG, "gnomes count: " + GnomeRepository.getInstance().getGnomeList().size());
         listGnomesHeader = new ArrayList<Gnome>();
         listAdapter = new ExpandableListAdapter(mainView, listGnomesHeader);
@@ -69,6 +75,9 @@ public class MainPresenter {
 
         View mCustomView = mInflater.inflate(R.layout.action_bar, null);
         EditText mTitleTextView = (EditText) mCustomView.findViewById(R.id.etFilter);
+        TextView mSpinnerLabel = (TextView) mCustomView.findViewById(R.id.tvSpinnerLabel);
+
+        mSpinnerLabel.setText(mainView.getResources().getString(R.string.spinner_label));
         mTitleTextView.setHint(mainView.getResources().getString(R.string.search_hint));
 
         mTitleTextView.addTextChangedListener(new TextWatcher() {
@@ -102,14 +111,18 @@ public class MainPresenter {
         });
         Spinner spHairColor = (Spinner) mCustomView.findViewById(R.id.spHairColor);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mainView,
-                R.array.hair_color_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.array.hair_color_array, R.layout.spinner_item);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
         spHairColor.setAdapter(adapter);
 
         spHairColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                showGnomesByHairColor(adapterView.getSelectedItem().toString());
+                if (mainInteractor.canFilter()) {
+                    showGnomesByHairColor(adapterView.getSelectedItem().toString());
+                } else {
+                    Toast.makeText(getContext(), "Please try again later", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -131,15 +144,18 @@ public class MainPresenter {
             return;
         }
 
-        DBInteractor interactor = DBInteractor.getInstance(mainView);
-        ArrayList<Gnome> list = interactor.getGnomesByHairColor(hairColor);
+        ArrayList<Gnome> list = mainInteractor.getGnomesByHairColor(hairColor);
         listAdapter.setList(list);
         listAdapter.notifyDataSetChanged();
     }
     private void resetView(){
         listGnomesHeader.clear();
-        listGnomesHeader.addAll(GnomeRepository.getInstance().getGnomeList());
+        listGnomesHeader.addAll(mainInteractor.getAllGnomes());
         listAdapter.setList(listGnomesHeader);
         listAdapter.notifyDataSetChanged();
+    }
+
+    public Context getContext(){
+        return mainView;
     }
 }

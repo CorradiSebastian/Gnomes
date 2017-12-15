@@ -18,6 +18,7 @@ import sebastiancorradi.altran.model.Gnome;
 public class DBInteractor {
     private AltranDBHelper dbHelper;
     private String colors;
+    private boolean dataBaseReady = false;
 
     private DBInteractor(Context context){
         dbHelper = AltranDBHelper.getInstance(context);
@@ -26,12 +27,13 @@ public class DBInteractor {
     String[] projection = {
             AltranDBHelper.COLUMN_GNOME_ID,
             AltranDBHelper.COLUMN_NAME,
+            AltranDBHelper.COLUMN_THUMBNAIL,
             AltranDBHelper.COLUMN_AGE,
             AltranDBHelper.COLUMN_HEIGHT,
             AltranDBHelper.COLUMN_WEIGHT,
             AltranDBHelper.COLUMN_HAIRCOLOR,
             AltranDBHelper.COLUMN_PROFESSIONS,
-            AltranDBHelper.COLUMN_FRIENDS,
+            AltranDBHelper.COLUMN_FRIENDS
     };
 
     public static DBInteractor getInstance(Context context){
@@ -49,6 +51,7 @@ public class DBInteractor {
         ContentValues values = new ContentValues();
         values.put(AltranDBHelper.COLUMN_GNOME_ID, gnome.getId());
         values.put(AltranDBHelper.COLUMN_NAME, gnome.getName());
+        values.put(AltranDBHelper.COLUMN_THUMBNAIL, gnome.getThumbnail());
         values.put(AltranDBHelper.COLUMN_AGE, gnome.getAge());
         values.put(AltranDBHelper.COLUMN_HEIGHT, gnome.getHeight());
         values.put(AltranDBHelper.COLUMN_WEIGHT, gnome.getWeight());
@@ -60,6 +63,23 @@ public class DBInteractor {
 // Insert the new row, returning the primary key value of the new row
 
         return dbHelper.insert(AltranDBHelper.TABLE_NAME, values);
+    }
+    public long insertOrThrow(Gnome gnome){
+// Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(AltranDBHelper.COLUMN_GNOME_ID, gnome.getId());
+        values.put(AltranDBHelper.COLUMN_NAME, gnome.getName());
+        values.put(AltranDBHelper.COLUMN_THUMBNAIL, gnome.getThumbnail());
+        values.put(AltranDBHelper.COLUMN_AGE, gnome.getAge());
+        values.put(AltranDBHelper.COLUMN_HEIGHT, gnome.getHeight());
+        values.put(AltranDBHelper.COLUMN_WEIGHT, gnome.getWeight());
+        values.put(AltranDBHelper.COLUMN_HAIRCOLOR, gnome.getHair_color());
+        values.put(AltranDBHelper.COLUMN_PROFESSIONS, Utils.join(", ", gnome.getProfessions()));
+        values.put(AltranDBHelper.COLUMN_FRIENDS, Utils.join(", ", gnome.getFriends()));
+
+// Insert the new row, returning the primary key value of the new row
+
+        return dbHelper.insertOrThrow(AltranDBHelper.TABLE_NAME, values);
     }
 
     public ArrayList<Gnome> getAll(){
@@ -86,6 +106,7 @@ public class DBInteractor {
                 c.moveToNext();
             }
         }
+        c.close();
         return result;
     }
 
@@ -108,7 +129,7 @@ public class DBInteractor {
         if (c.moveToFirst()) {
                 gnome = createFromCursor(c);
         }
-
+        c.close();
         return gnome;
     }
 
@@ -132,16 +153,19 @@ public class DBInteractor {
         );
         Gnome gnome = null;
         ArrayList<Gnome> result = new ArrayList<Gnome>();
-        if (c.moveToFirst()) {
+        if (c.getCount() > 0) {
+            c.close();
             return true;
         } else {
+            c.close();
             return false;
         }
+
     }
     public void insertAll(ArrayList<Gnome> gnomes){
         colors = "";
         for (int i = 0; i < gnomes.size(); i++){
-            insert(gnomes.get(i));
+                insertOrThrow(gnomes.get(i));
         }
     }
 
@@ -175,7 +199,7 @@ public class DBInteractor {
                 c.moveToNext();
             }
         }
-
+        c.close();
         return result;
     }
 
@@ -183,6 +207,7 @@ public class DBInteractor {
         Gnome result = new Gnome();
         result.setId(c.getInt(c.getColumnIndex(AltranDBHelper.COLUMN_GNOME_ID)));
         result.setName(c.getString(c.getColumnIndex(AltranDBHelper.COLUMN_NAME)));
+        result.setThumbnail(c.getString(c.getColumnIndex(AltranDBHelper.COLUMN_THUMBNAIL)));
         result.setAge(c.getInt(c.getColumnIndex(AltranDBHelper.COLUMN_AGE)));
         result.setHeight(c.getFloat(c.getColumnIndex(AltranDBHelper.COLUMN_HEIGHT)));
         result.setWeight(c.getFloat(c.getColumnIndex(AltranDBHelper.COLUMN_WEIGHT)));
@@ -201,5 +226,46 @@ public class DBInteractor {
         }
         result.setFriends(friends);
         return result;
+    }
+    public int gnomeCount(){
+        int result = 0;
+        String fieldName = "CANTIDAD";
+        String[] customProjection = {
+                AltranDBHelper.COLUMN_GNOME_ID,
+        };
+
+        String proj[] = new String[1];
+        proj[0] = "Count (*) as " + fieldName;
+
+
+        String sortOrder =
+                AltranDBHelper.COLUMN_NAME + " ASC";
+
+        Cursor c = dbHelper.query(
+                AltranDBHelper.TABLE_NAME,                     // The table to query
+                proj,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null                                 // The sort order
+        );
+
+        if (c.getCount() > 0){
+            c.moveToFirst();
+            result =  Integer.valueOf(c.getString(c.getColumnIndex(fieldName)));
+        } else {
+            result = 0;
+        }
+        c.close();
+        return result;
+    }
+    public void setDataBaseReady(){
+        this.dataBaseReady = true;
+    }
+
+    public void setDataBaseNOTReady(){
+        this.dataBaseReady = false;
+    }
+    public boolean isDataBaseReady(){
+        return dataBaseReady;
     }
 }

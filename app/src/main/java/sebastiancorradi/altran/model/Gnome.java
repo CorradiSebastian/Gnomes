@@ -164,4 +164,12 @@ public class Gnome implements Parcelable {
     public void setId(int id) {
         this.id = id;
     }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 }

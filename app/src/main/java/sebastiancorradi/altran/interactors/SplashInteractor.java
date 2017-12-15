@@ -1,6 +1,7 @@
 package sebastiancorradi.altran.interactors;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import java.util.ArrayList;
 
@@ -26,8 +27,20 @@ public class SplashInteractor {
             @Override
             public void onResponseSuccess(String response) {
                 GnomeRepository.getInstance().setData(response);
-                DBInteractor dbInteractor = DBInteractor.getInstance(context);
-                dbInteractor.insertAll(GnomeRepository.getInstance().getGnomeList());
+                final DBInteractor dbInteractor = DBInteractor.getInstance(context);
+                int gnomesCount = dbInteractor.gnomeCount();
+                if (gnomesCount > 0 ) {
+                    //dbInteractor.insertAll(GnomeRepository.getInstance().getGnomeList());
+
+                    new Thread(new Runnable() {
+                        public void run(){
+                            dbInteractor.setDataBaseNOTReady();
+                            dbInteractor.insertAll(GnomeRepository.getInstance().getGnomeList());
+                            dbInteractor.setDataBaseReady();
+                        }
+                    }).start();
+                }
+
                 //ArrayList<Gnome> hairColor = dbInteractor.getGnomesByHairColor("Red");
                 presenter.gnomesDataLoaded();
             }
