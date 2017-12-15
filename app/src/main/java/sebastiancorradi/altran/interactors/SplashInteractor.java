@@ -29,7 +29,7 @@ public class SplashInteractor {
                 GnomeRepository.getInstance().setData(response);
                 final DBInteractor dbInteractor = DBInteractor.getInstance(context);
                 int gnomesCount = dbInteractor.gnomeCount();
-                if (gnomesCount > 0 ) {
+                if (gnomesCount == 0 ) {
                     //dbInteractor.insertAll(GnomeRepository.getInstance().getGnomeList());
 
                     new Thread(new Runnable() {
@@ -39,6 +39,8 @@ public class SplashInteractor {
                             dbInteractor.setDataBaseReady();
                         }
                     }).start();
+                } else {
+                    dbInteractor.setDataBaseReady();
                 }
 
                 //ArrayList<Gnome> hairColor = dbInteractor.getGnomesByHairColor("Red");

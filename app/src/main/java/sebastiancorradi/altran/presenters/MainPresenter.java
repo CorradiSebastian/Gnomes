@@ -42,7 +42,10 @@ public class MainPresenter {
     private ExpandableListView expListView;
     private ExpandableListAdapter listAdapter;
     private ArrayList<Gnome> listGnomesHeader; // header titles
+    private ArrayList<Gnome> workingGnomeList;
     private String searchFilter;
+    private EditText mTitleTextView;
+    private boolean hairFiltered = false;
     // child data in format of header title, child title
     private HashMap<String, Integer> mapColors;
 
@@ -54,6 +57,7 @@ public class MainPresenter {
         listAdapter = new ExpandableListAdapter(mainView, listGnomesHeader);
         expListView = (ExpandableListView) mainView.findViewById(R.id.lvGnomes);
         expListView.setAdapter(listAdapter);
+        workingGnomeList = GnomeRepository.getInstance().getGnomeList();
         /*
         listGnomesHeader.addAll(GnomeRepository.getInstance().getGnomeList());
         // get the listview
@@ -74,7 +78,7 @@ public class MainPresenter {
         LayoutInflater mInflater = LayoutInflater.from(mainView);
 
         View mCustomView = mInflater.inflate(R.layout.action_bar, null);
-        EditText mTitleTextView = (EditText) mCustomView.findViewById(R.id.etFilter);
+        mTitleTextView = (EditText) mCustomView.findViewById(R.id.etFilter);
         TextView mSpinnerLabel = (TextView) mCustomView.findViewById(R.id.tvSpinnerLabel);
 
         mSpinnerLabel.setText(mainView.getResources().getString(R.string.spinner_label));
@@ -87,9 +91,12 @@ public class MainPresenter {
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                 // When user changed the Text
                 //listAdapter
+                if ((hairFiltered) && (cs.length() == 0)){
+                    return;
+                }
                 searchFilter = cs.toString();
                 listGnomesHeader.clear();
-                listGnomesHeader.addAll(GnomeRepository.getInstance().getGnomeList());
+                listGnomesHeader.addAll(workingGnomeList);
                 for (int i = listGnomesHeader.size(); i > 0; i--){
                     if (!listGnomesHeader.get(i - 1).getName().toUpperCase().contains(searchFilter.toUpperCase())){
                         listGnomesHeader.remove(i-1);
@@ -97,7 +104,9 @@ public class MainPresenter {
 
                     }
                 }
+                listAdapter.setList(listGnomesHeader);
                 listAdapter.notifyDataSetChanged();
+
                // listGnomesHeader.stream().filter(gnome -> gnome.getName().contains(searchFilter));
 
 
@@ -141,12 +150,16 @@ public class MainPresenter {
     private void showGnomesByHairColor(String hairColor){
         if (hairColor.equals(mainView.getResources().getString(R.string.label_All))){
             resetView();
+            hairFiltered = false;
             return;
         }
-
-        ArrayList<Gnome> list = mainInteractor.getGnomesByHairColor(hairColor);
-        listAdapter.setList(list);
+        listGnomesHeader.clear();
+        workingGnomeList = mainInteractor.getGnomesByHairColor(hairColor);
+        listGnomesHeader.addAll(workingGnomeList);
+        listAdapter.setList(listGnomesHeader);
         listAdapter.notifyDataSetChanged();
+        hairFiltered = true;
+        mTitleTextView.setText("");
     }
     private void resetView(){
         listGnomesHeader.clear();
