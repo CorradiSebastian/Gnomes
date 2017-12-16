@@ -203,7 +203,7 @@ public class DBInteractor {
         return result;
     }
 
-    private Gnome createFromCursor(Cursor c){
+    public Gnome createFromCursor(Cursor c){
         Gnome result = new Gnome();
         result.setId(c.getInt(c.getColumnIndex(AltranDBHelper.COLUMN_GNOME_ID)));
         result.setName(c.getString(c.getColumnIndex(AltranDBHelper.COLUMN_NAME)));

@@ -1,6 +1,14 @@
 package sebastiancorradi.altran;
 
+import android.content.Context;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import sebastiancorradi.altran.interactors.DBInteractor;
+import sebastiancorradi.altran.model.Gnome;
 
 import static org.junit.Assert.*;
 
@@ -9,9 +17,16 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
+
+@RunWith(MockitoJUnitRunner.class)
 public class ExampleUnitTest {
+
+    @Mock
+    Context mMockContext;
+
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    public void createFromCursor() throws Exception {
+        DBInteractor interactor = DBInteractor.getInstance(mMockContext);
+
     }
 }

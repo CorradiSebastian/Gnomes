@@ -10,6 +10,7 @@ import sebastiancorradi.altran.RequestManager.iResponseListener;
 import sebastiancorradi.altran.SQL.AltranDBHelper;
 import sebastiancorradi.altran.model.Gnome;
 import sebastiancorradi.altran.presenters.SplashPresenter;
+import sebastiancorradi.altran.presenters.listeners.iGnomesLoadedListener;
 import sebastiancorradi.altran.repository.GnomeRepository;
 
 /**
@@ -17,12 +18,12 @@ import sebastiancorradi.altran.repository.GnomeRepository;
  */
 
 public class SplashInteractor {
-    private SplashPresenter presenter;
-    public SplashInteractor(SplashPresenter presenter){
-        this.presenter = presenter;
+    //private SplashPresenter presenter;
+    public SplashInteractor(){
+
     }
 
-    public void getGnomesData(final Context context){
+    public void getGnomesData(final Context context, final iGnomesLoadedListener listener){
         RequestManager.getInstance().doGnomeDetailsRequest(context, new iResponseListener() {
             @Override
             public void onResponseSuccess(String response) {
@@ -44,12 +45,12 @@ public class SplashInteractor {
                 }
 
                 //ArrayList<Gnome> hairColor = dbInteractor.getGnomesByHairColor("Red");
-                presenter.gnomesDataLoaded();
+                listener.gnomesDataLoaded();
             }
 
             @Override
             public void onResponseError(int errorCode, String error) {
-                //presenter.gnomesDataError();
+                //listener.gnomesDataError();
             }
         });
     }

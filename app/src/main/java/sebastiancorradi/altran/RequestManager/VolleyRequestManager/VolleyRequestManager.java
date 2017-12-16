@@ -41,8 +41,6 @@ public class VolleyRequestManager {
         StringRequest stringRequest = new StringRequest(method, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                // Display the first 500 characters of the response string.
-                //mTextView.setText("Response is: "+ response.substring(0,500));
                 responseListener.onResponseSuccess(response);
             }
 
