@@ -258,6 +258,49 @@ public class DBInteractor {
         c.close();
         return result;
     }
+
+
+    private  float getCalculatedFloat(String field, String function){
+        float result = 0;
+        String fieldName = "FIELD";
+
+        String proj[] = new String[1];
+        proj[0] = function + "(" + field + ") as " + fieldName;
+
+        Cursor c = dbHelper.query(
+                AltranDBHelper.TABLE_NAME,                     // The table to query
+                proj,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null                                 // The sort order
+        );
+
+        if (c.getCount() > 0){
+            c.moveToFirst();
+            result =  Float.valueOf(c.getString(c.getColumnIndex(fieldName)));
+        } else {
+            result = 0;
+        }
+        c.close();
+        return result;
+    }
+
+    public float getMaxHeight(){
+        return getCalculatedFloat("height", "max");
+    }
+
+
+
+    public float getMinHeight(){
+        return getCalculatedFloat("height", "min");
+    }
+    public float getMaxWeight(){
+        return getCalculatedFloat("weight", "max");
+    }
+
+    public float getMinWeight(){
+        return getCalculatedFloat("weight", "min");
+    }
     public void setDataBaseReady(){
         this.dataBaseReady = true;
     }

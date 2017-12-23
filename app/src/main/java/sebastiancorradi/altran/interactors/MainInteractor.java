@@ -31,4 +31,17 @@ public class MainInteractor {
     public boolean canFilter(){
         return DBInteractor.getInstance(mainPresenter.getContext()).isDataBaseReady();
     }
+
+    public float getMaxHeight(){
+        return DBInteractor.getInstance(mainPresenter.getContext()).getMaxHeight();
+    }
+    public float getMinHeight(){
+        return DBInteractor.getInstance(mainPresenter.getContext()).getMinHeight();
+    }
+    public float getMaxWeight(){
+        return DBInteractor.getInstance(mainPresenter.getContext()).getMaxWeight();
+    }
+    public float getMinWeight(){
+        return DBInteractor.getInstance(mainPresenter.getContext()).getMinWeight();
+    }
 }

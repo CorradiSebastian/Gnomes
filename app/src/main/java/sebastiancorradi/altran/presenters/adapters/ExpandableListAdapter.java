@@ -38,6 +38,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context _context;
     private ArrayList<Gnome> _listDataHeader; // header titles
     private Map<String, Integer> mapColors;
+    private float minHeight;
+    private float maxHeight;
+    private float minWeight;
+    private float maxWeight;
 
     public ExpandableListAdapter(Context context, ArrayList<Gnome> listDataHeader) {
         this._context = context;
@@ -152,12 +156,36 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         lblListSubHeader.setText(headerSubTitle);
 
         ImageView ivHair = (ImageView) convertView.findViewById(R.id.ivHairColor);
-
         ivHair.setColorFilter(mapColors.get(gnome.getHair_color()));
 
+        ImageView ivGnome = (ImageView) convertView.findViewById(R.id.ivGnome);
+        float scaleX = getScaleX(gnome);
+        float scaleY = getScaleY(gnome);
+        ivGnome.setScaleX(scaleX);
+        ivHair.setScaleX(scaleX);
+
+        ivGnome.setScaleY(scaleY);
+        ivHair.setScaleY(scaleY);
+        //ivGnome.setScaleY(getScaleY(gnome));
         return convertView;
     }
 
+    public float getScaleX(Gnome gnome){
+        float ref = gnome.getWeight() - minWeight;
+        float scale = (ref / (maxWeight - minWeight));
+        scale = (scale * 0.5f) + 0.5f;
+
+
+        return scale;
+    }
+
+    public float getScaleY(Gnome gnome){
+        float ref = gnome.getHeight() - minHeight;
+        float scale = (ref / (maxHeight - minHeight));
+        scale = (scale * 0.5f) + 0.5f;
+
+        return scale;
+    }
     @Override
     public boolean hasStableIds() {
         return false;
@@ -166,5 +194,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    public void setEnvironmentValues(float maxHeight, float minHeight, float maxWeigh, float minWeight) {
+        this.maxHeight = maxHeight;
+        this.minHeight = minHeight;
+        this.maxWeight = maxWeigh;
+        this.minWeight = minWeight;
     }
 }

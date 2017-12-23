@@ -29,6 +29,7 @@ public class AltranDBHelper extends SQLiteOpenHelper {
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INT_TYPE = " INTEGER";
+    private static final String REAL_TYPE = " REAL";
     public static final String COMMA_SEP = ", ";
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TABLE_NAME + " (" +
@@ -37,8 +38,8 @@ public class AltranDBHelper extends SQLiteOpenHelper {
                     COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
                     COLUMN_THUMBNAIL + TEXT_TYPE + COMMA_SEP +
                     COLUMN_AGE + INT_TYPE + COMMA_SEP +
-                    COLUMN_HEIGHT + TEXT_TYPE + COMMA_SEP +
-                    COLUMN_WEIGHT + TEXT_TYPE + COMMA_SEP +
+                    COLUMN_HEIGHT + REAL_TYPE + COMMA_SEP +
+                    COLUMN_WEIGHT + REAL_TYPE + COMMA_SEP +
                     COLUMN_HAIRCOLOR + TEXT_TYPE + COMMA_SEP +
                     COLUMN_PROFESSIONS + TEXT_TYPE + COMMA_SEP +
                     COLUMN_FRIENDS + TEXT_TYPE + " )";
@@ -48,7 +49,7 @@ public class AltranDBHelper extends SQLiteOpenHelper {
 
 
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "altran.db";
 
     private static AltranDBHelper instance;

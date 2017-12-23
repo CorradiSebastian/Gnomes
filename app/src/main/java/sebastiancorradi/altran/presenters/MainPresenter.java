@@ -55,19 +55,12 @@ public class MainPresenter {
         Log.d(TAG, "gnomes count: " + GnomeRepository.getInstance().getGnomeList().size());
         listGnomesHeader = new ArrayList<Gnome>();
         listAdapter = new ExpandableListAdapter(mainView, listGnomesHeader);
+        listAdapter.setEnvironmentValues(mainInteractor.getMaxHeight(), mainInteractor.getMinHeight(),
+                                        mainInteractor.getMaxWeight(), mainInteractor.getMinWeight());
         expListView = (ExpandableListView) mainView.findViewById(R.id.lvGnomes);
         expListView.setAdapter(listAdapter);
         workingGnomeList = GnomeRepository.getInstance().getGnomeList();
-        /*
-        listGnomesHeader.addAll(GnomeRepository.getInstance().getGnomeList());
-        // get the listview
-        expListView = (ExpandableListView) mainView.findViewById(R.id.lvGnomes);
 
-        listAdapter = new ExpandableListAdapter(mainView, listGnomesHeader);
-
-        // setting list adapter
-        expListView.setAdapter(listAdapter);
-*/
         setActionBar();
     }
 

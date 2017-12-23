@@ -43,8 +43,6 @@ public class SplashInteractor {
                 } else {
                     dbInteractor.setDataBaseReady();
                 }
-
-                //ArrayList<Gnome> hairColor = dbInteractor.getGnomesByHairColor("Red");
                 listener.gnomesDataLoaded();
             }
 

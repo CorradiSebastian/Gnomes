@@ -39,6 +39,7 @@
         android:padding="2dp">
 
         <ImageView
+            android:id="@+id/ivGnome"
             android:layout_width="46dp"
             android:layout_height="46dp"
             android:src="@drawable/ngomo6"
