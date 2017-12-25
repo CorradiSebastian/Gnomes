@@ -1,6 +1,8 @@
 package sebastiancorradi.altran.Utils;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,5 +56,20 @@ public class Utils {
         result.put(context.getResources().getString(R.string.color_pink), context.getResources().getColor(R.color.colorPink));
 
         return result;
+    }
+
+    public AlertDialog showInformationDialog(Context context, String message, String title) {
+        return new AlertDialog.Builder(context)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+
+                }).show();
     }
 }

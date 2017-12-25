@@ -17,8 +17,7 @@ import sebastiancorradi.altran.model.Gnome;
 
 public class DBInteractor {
     private AltranDBHelper dbHelper;
-    private String colors;
-    private boolean dataBaseReady = false;
+    private boolean working = false;
 
     private DBInteractor(Context context){
         dbHelper = AltranDBHelper.getInstance(context);
@@ -163,10 +162,11 @@ public class DBInteractor {
 
     }
     public void insertAll(ArrayList<Gnome> gnomes){
-        colors = "";
+        working = true;
         for (int i = 0; i < gnomes.size(); i++){
                 insertOrThrow(gnomes.get(i));
         }
+        working = false;
     }
 
     public ArrayList<Gnome> getGnomesByHairColor(String hairColor){
@@ -301,14 +301,8 @@ public class DBInteractor {
     public float getMinWeight(){
         return getCalculatedFloat("weight", "min");
     }
-    public void setDataBaseReady(){
-        this.dataBaseReady = true;
-    }
 
-    public void setDataBaseNOTReady(){
-        this.dataBaseReady = false;
-    }
     public boolean isDataBaseReady(){
-        return dataBaseReady;
+        return  (!working) && (gnomeCount() > 0);
     }
 }

@@ -120,6 +120,11 @@ public class MainPresenter {
         spHairColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = mainView.getResources().getString(R.string.label_All);
+                if ( adapterView.getSelectedItem().toString().equals(value)){
+                    resetView();
+                    return;
+                }
                 if (mainInteractor.canFilter()) {
                     showGnomesByHairColor(adapterView.getSelectedItem().toString());
                 } else {

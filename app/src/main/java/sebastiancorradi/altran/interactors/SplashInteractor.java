@@ -1,6 +1,7 @@
 package sebastiancorradi.altran.interactors;
 
 import android.content.Context;
+import android.icu.text.TimeZoneFormat;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
@@ -29,28 +30,39 @@ public class SplashInteractor {
             public void onResponseSuccess(String response) {
                 GnomeRepository.getInstance().setData(response);
                 final DBInteractor dbInteractor = DBInteractor.getInstance(context);
-                int gnomesCount = dbInteractor.gnomeCount();
-                if (gnomesCount == 0 ) {
-                    //dbInteractor.insertAll(GnomeRepository.getInstance().getGnomeList());
-
+                if (! dbInteractor.isDataBaseReady() ) {
                     new Thread(new Runnable() {
                         public void run(){
-                            dbInteractor.setDataBaseNOTReady();
                             dbInteractor.insertAll(GnomeRepository.getInstance().getGnomeList());
-                            dbInteractor.setDataBaseReady();
                         }
                     }).start();
-                } else {
-                    dbInteractor.setDataBaseReady();
                 }
                 listener.gnomesDataLoaded();
             }
 
             @Override
             public void onResponseError(int errorCode, String error) {
-                //listener.gnomesDataError();
+                DBInteractor dbInteractor = DBInteractor.getInstance(context);
+                if (dbInteractor.isDataBaseReady()){
+                    GnomeRepository.getInstance().setData(dbInteractor.getAll());
+                    listener.gnomesDataLoaded();
+                } else {
+                    listener.gnomesDataError(errorCode, error);
+                }
             }
         });
     }
 
+    public boolean gnomesDataAvailable(Context context){
+        return DBInteractor.getInstance(context).isDataBaseReady();
+    }
+
+    public ArrayList<Gnome> getGnomesStoredData(Context context){
+        DBInteractor dbInteractor = DBInteractor.getInstance(context);
+        if (!dbInteractor.isDataBaseReady()){
+            return null;
+        } else {
+            return dbInteractor.getAll();
+        }
+    }
 }

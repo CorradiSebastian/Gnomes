@@ -6,5 +6,5 @@ package sebastiancorradi.altran.presenters.listeners;
 
 public interface iGnomesLoadedListener {
     void gnomesDataLoaded();
-    void gnomesDataError();
+    void gnomesDataError(int errorCode, String error);
 }
