@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.ButtonBarLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +31,6 @@ import sebastiancorradi.altran.interactors.DBInteractor;
 import sebastiancorradi.altran.interactors.MainInteractor;
 import sebastiancorradi.altran.presenters.adapters.ExpandableListAdapter;
 import sebastiancorradi.altran.model.Gnome;
-import sebastiancorradi.altran.repository.GnomeRepository;
 
 /**
  * Created by Gregorio on 12/2/2017.
@@ -46,20 +48,20 @@ public class MainPresenter {
     private String searchFilter;
     private EditText mTitleTextView;
     private boolean hairFiltered = false;
+    private boolean sortAsc = false;
     // child data in format of header title, child title
     private HashMap<String, Integer> mapColors;
 
     public MainPresenter(MainActivity activity){
         this.mainView = activity;
         mainInteractor = new MainInteractor(this);
-        Log.d(TAG, "gnomes count: " + GnomeRepository.getInstance().getGnomeList().size());
         listGnomesHeader = new ArrayList<Gnome>();
         listAdapter = new ExpandableListAdapter(mainView, listGnomesHeader);
         listAdapter.setEnvironmentValues(mainInteractor.getMaxHeight(), mainInteractor.getMinHeight(),
                                         mainInteractor.getMaxWeight(), mainInteractor.getMinWeight());
         expListView = (ExpandableListView) mainView.findViewById(R.id.lvGnomes);
         expListView.setAdapter(listAdapter);
-        workingGnomeList = GnomeRepository.getInstance().getGnomeList();
+        workingGnomeList = mainInteractor.getAllGnomes();
 
         setActionBar();
     }
@@ -73,6 +75,7 @@ public class MainPresenter {
         View mCustomView = mInflater.inflate(R.layout.action_bar, null);
         mTitleTextView = (EditText) mCustomView.findViewById(R.id.etFilter);
         TextView mSpinnerLabel = (TextView) mCustomView.findViewById(R.id.tvSpinnerLabel);
+        ImageButton btnSort = (ImageButton)mCustomView.findViewById(R.id.btnSort);
 
         mSpinnerLabel.setText(mainView.getResources().getString(R.string.spinner_label));
         mTitleTextView.setHint(mainView.getResources().getString(R.string.search_hint));
@@ -114,8 +117,8 @@ public class MainPresenter {
         Spinner spHairColor = (Spinner) mCustomView.findViewById(R.id.spHairColor);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mainView,
                 R.array.hair_color_array, R.layout.spinner_item);
-        adapter.setDropDownViewResource(R.layout.spinner_item);
         spHairColor.setAdapter(adapter);
+
 
         spHairColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -123,6 +126,7 @@ public class MainPresenter {
                 String value = mainView.getResources().getString(R.string.label_All);
                 if ( adapterView.getSelectedItem().toString().equals(value)){
                     resetView();
+                    hairFiltered = false;
                     return;
                 }
                 if (mainInteractor.canFilter()) {
@@ -137,29 +141,40 @@ public class MainPresenter {
 
             }
         });
+
+        btnSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listAdapter.sortByName(sortAsc);
+                changeSort(view);
+                listAdapter.notifyDataSetChanged();
+            }
+        });
+
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
     }
 
+    private void changeSort(View view){
+        sortAsc = !sortAsc;
+        view.setScaleX(view.getScaleX() * -1);
+    }
     public void setGnomesList(ArrayList<Gnome> list){
         this.listGnomesHeader = list;
     }
 
     private void showGnomesByHairColor(String hairColor){
-        if (hairColor.equals(mainView.getResources().getString(R.string.label_All))){
-            resetView();
-            hairFiltered = false;
-            return;
-        }
         listGnomesHeader.clear();
         workingGnomeList = mainInteractor.getGnomesByHairColor(hairColor);
         listGnomesHeader.addAll(workingGnomeList);
         listAdapter.setList(listGnomesHeader);
         listAdapter.notifyDataSetChanged();
         hairFiltered = true;
+        sortAsc = true;
         mTitleTextView.setText("");
     }
     private void resetView(){
+        mTitleTextView.setText("");
         listGnomesHeader.clear();
         listGnomesHeader.addAll(mainInteractor.getAllGnomes());
         listAdapter.setList(listGnomesHeader);

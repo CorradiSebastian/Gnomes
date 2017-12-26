@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import sebastiancorradi.altran.model.Gnome;
 import sebastiancorradi.altran.presenters.MainPresenter;
-import sebastiancorradi.altran.repository.GnomeRepository;
 
 /**
  * Created by Gregorio on 12/15/2017.
@@ -13,19 +12,21 @@ import sebastiancorradi.altran.repository.GnomeRepository;
 public class MainInteractor {
 
     MainPresenter mainPresenter;
+    DBInteractor dbInteractor;
 
     public MainInteractor(MainPresenter mainPresenter){
         this.mainPresenter = mainPresenter;
+        dbInteractor = DBInteractor.getInstance(mainPresenter.getContext());
+
     }
 
     public ArrayList<Gnome> getGnomesByHairColor(String hairColor){
-        DBInteractor interactor = DBInteractor.getInstance(mainPresenter.getContext());
-        ArrayList<Gnome> list = interactor.getGnomesByHairColor(hairColor);
+        ArrayList<Gnome> list = dbInteractor.getGnomesByHairColor(hairColor);
         return list;
     }
 
     public ArrayList<Gnome> getAllGnomes(){
-        return GnomeRepository.getInstance().getGnomeList();
+        return dbInteractor.getAll();
     }
 
     public boolean canFilter(){

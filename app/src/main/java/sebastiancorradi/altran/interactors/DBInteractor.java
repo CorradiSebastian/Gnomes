@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import sebastiancorradi.altran.SQL.AltranDBHelper;
 import sebastiancorradi.altran.Utils.Utils;
 import sebastiancorradi.altran.model.Gnome;
+import sebastiancorradi.altran.repository.GnomeRepository;
 
 /**
  * Created by Gregorio on 12/9/2017.
@@ -18,9 +19,11 @@ import sebastiancorradi.altran.model.Gnome;
 public class DBInteractor {
     private AltranDBHelper dbHelper;
     private boolean working = false;
+    private GnomeRepository repository;
 
     private DBInteractor(Context context){
         dbHelper = AltranDBHelper.getInstance(context);
+        repository = GnomeRepository.getInstance();
     }
     private static DBInteractor instance;
     String[] projection = {
@@ -169,6 +172,19 @@ public class DBInteractor {
         working = false;
     }
 
+    public void insertAll(String jsonData){
+        repository.setData(jsonData);
+        final ArrayList<Gnome> gnomes = repository.getGnomeList();
+        if (gnomeCount() == 0) {
+            new Thread(new Runnable() {
+                public void run(){
+                    insertAll(gnomes);
+                }
+            }).start();
+
+        }
+    }
+
     public ArrayList<Gnome> getGnomesByHairColor(String hairColor){
         String columns[] = {AltranDBHelper.COLUMN_HAIRCOLOR};
         String values[] = {hairColor};
@@ -304,5 +320,11 @@ public class DBInteractor {
 
     public boolean isDataBaseReady(){
         return  (!working) && (gnomeCount() > 0);
+    }
+
+    public void prepareData(){
+        working = true;
+        repository.setData(getAll());
+        working = false;
     }
 }

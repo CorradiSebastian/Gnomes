@@ -48,7 +48,7 @@ public class VolleyRequestManager {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                responseListener.onResponseError(error.networkResponse.statusCode, error.getMessage());
+                responseListener.onResponseError(error.networkResponse == null ? 0 : error.networkResponse.statusCode, error.getMessage());
             }
         }){
             @Override

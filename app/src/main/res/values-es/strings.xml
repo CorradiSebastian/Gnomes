@@ -1,14 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Altran</string>
 
-    <string name="label_age">Age:\u0020</string>
-    <string name="label_height">Height:\u0020</string>
-    <string name="label_weight">Weight:\u0020</string>
-    <string name="label_hair_color">Hair color:\u0020</string>
-    <string name="label_professions">Professions:\u0020</string>
-    <string name="label_friends">Friends:\u0020</string>
-    <string name="search_hint">Search</string>
-    <string name="spinner_label">Hair Filter</string>
+    <string name="label_age">Edad:\u0020</string>
+    <string name="label_height">Altura:\u0020</string>
+    <string name="label_weight">Peso:\u0020</string>
+    <string name="label_hair_color">Color Pelo:\u0020</string>
+    <string name="label_professions">Profesiones:\u0020</string>
+    <string name="label_friends">Amigos:\u0020</string>
+    <string name="search_hint">Buscar</string>
+    <string name="spinner_label">Filtro Color</string>
 
     <string name="label_All">All</string>
     <string name="color_red">Red</string>

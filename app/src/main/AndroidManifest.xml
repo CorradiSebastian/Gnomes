@@ -24,7 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity" android:theme="@style/MainAppTheme"></activity>
+        <activity android:name=".activities.MainActivity"
+                  android:theme="@style/MainAppTheme"
+                  android:windowSoftInputMode="stateHidden">
+
+        </activity>
     </application>
 
 </manifest>

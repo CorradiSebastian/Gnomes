@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Altran.iml" filepath="$PROJECT_DIR$/Altran.iml" />
+      <module fileurl="file://C:\dev\AltranNuevo\Altran.iml" filepath="C:\dev\AltranNuevo\Altran.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AltranNuevo.iml" filepath="$PROJECT_DIR$/AltranNuevo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\dev\AltranNuevo\app\app.iml" filepath="C:\dev\AltranNuevo\app\app.iml" />
     </modules>
   </component>
 </project>

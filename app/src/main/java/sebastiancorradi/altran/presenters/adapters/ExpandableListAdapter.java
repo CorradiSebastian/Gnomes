@@ -23,6 +23,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +44,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private float maxHeight;
     private float minWeight;
     private float maxWeight;
+
 
     public ExpandableListAdapter(Context context, ArrayList<Gnome> listDataHeader) {
         this._context = context;
@@ -201,5 +204,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this.minHeight = minHeight;
         this.maxWeight = maxWeigh;
         this.minWeight = minWeight;
+    }
+
+    public void sortByName(final boolean sortAsc){
+        Collections.sort(_listDataHeader, new Comparator<Gnome>() {
+
+            @Override
+            public int compare(Gnome gnome, Gnome t1) {
+                if (sortAsc) {
+                    return gnome.getName().toUpperCase().compareTo(t1.getName().toUpperCase());
+                }
+                return t1.getName().toUpperCase().compareTo(gnome.getName().toUpperCase());
+            }
+        });
+
     }
 }
