@@ -48,7 +48,7 @@ public class MainPresenter {
     private String searchFilter;
     private EditText mTitleTextView;
     private boolean hairFiltered = false;
-    private boolean sortAsc = false;
+    private boolean sortAsc = true;
     // child data in format of header title, child title
     private HashMap<String, Integer> mapColors;
 
@@ -145,8 +145,8 @@ public class MainPresenter {
         btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                changeSort();
                 listAdapter.sortByName(sortAsc);
-                changeSort(view);
                 listAdapter.notifyDataSetChanged();
             }
         });
@@ -155,9 +155,14 @@ public class MainPresenter {
         mActionBar.setDisplayShowCustomEnabled(true);
     }
 
-    private void changeSort(View view){
+    private void changeSort(){
         sortAsc = !sortAsc;
-        view.setScaleX(view.getScaleX() * -1);
+        View imagesort = getImageSort();
+        imagesort.setScaleX(imagesort.getScaleX() * -1);
+    }
+    private View getImageSort(){
+        ActionBar mActionBar = mainView.getSupportActionBar();
+        return mActionBar.getCustomView().findViewById(R.id.btnSort);
     }
     public void setGnomesList(ArrayList<Gnome> list){
         this.listGnomesHeader = list;
@@ -171,6 +176,7 @@ public class MainPresenter {
         listAdapter.notifyDataSetChanged();
         hairFiltered = true;
         sortAsc = true;
+        getImageSort().setScaleX(1);
         mTitleTextView.setText("");
     }
     private void resetView(){
@@ -178,6 +184,8 @@ public class MainPresenter {
         listGnomesHeader.clear();
         listGnomesHeader.addAll(mainInteractor.getAllGnomes());
         listAdapter.setList(listGnomesHeader);
+        sortAsc = true;
+        getImageSort().setScaleX(1);
         listAdapter.notifyDataSetChanged();
     }
 
