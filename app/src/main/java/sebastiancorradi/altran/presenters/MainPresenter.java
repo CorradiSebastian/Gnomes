@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ButtonBarLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,7 +23,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,6 +32,7 @@ import sebastiancorradi.altran.interactors.DBInteractor;
 import sebastiancorradi.altran.interactors.MainInteractor;
 import sebastiancorradi.altran.presenters.adapters.ExpandableListAdapter;
 import sebastiancorradi.altran.model.Gnome;
+import sebastiancorradi.altran.presenters.adapters.RecyclerViewAdapter;
 
 /**
  * Created by Gregorio on 12/2/2017.
@@ -41,8 +43,10 @@ public class MainPresenter {
     //private ArrayList<Gnome> gnomesList;
     private MainActivity mainView;
     private MainInteractor mainInteractor;
-    private ExpandableListView expListView;
+    //private ExpandableListView expListView;
+    private RecyclerView recyclerView;
     private ExpandableListAdapter listAdapter;
+    private RecyclerViewAdapter recyclerViewAdapter;
     private ArrayList<Gnome> listGnomesHeader; // header titles
     private ArrayList<Gnome> workingGnomeList;
     private String searchFilter;
@@ -57,10 +61,21 @@ public class MainPresenter {
         mainInteractor = new MainInteractor(this);
         listGnomesHeader = new ArrayList<Gnome>();
         listAdapter = new ExpandableListAdapter(mainView, listGnomesHeader);
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(mainView, listGnomesHeader);
+        recyclerViewAdapter.setEnvironmentValues(mainInteractor.getMaxHeight(), mainInteractor.getMinHeight(),
+                mainInteractor.getMaxWeight(), mainInteractor.getMinWeight());
+
         listAdapter.setEnvironmentValues(mainInteractor.getMaxHeight(), mainInteractor.getMinHeight(),
                                         mainInteractor.getMaxWeight(), mainInteractor.getMinWeight());
-        expListView = (ExpandableListView) mainView.findViewById(R.id.lvGnomes);
-        expListView.setAdapter(listAdapter);
+        recyclerView = (RecyclerView) mainView.findViewById(R.id.rvGnomes);
+        recyclerView.setAdapter(recyclerViewAdapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mainView);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.scrollToPosition(0);
+        recyclerView.setLayoutManager(layoutManager);
+
+        //expListView.setAdapter(listAdapter);
         workingGnomeList = mainInteractor.getAllGnomes();
 
         setActionBar();

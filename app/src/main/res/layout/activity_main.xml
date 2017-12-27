@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="sebastiancorradi.altran.activities.MainActivity">
+    android:layout_height="match_parent">
 
-    <ExpandableListView
-        android:id="@+id/lvGnomes"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvGnomes"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:padding="10dp"
+        android:dividerHeight="0dp"
+        ></android.support.v7.widget.RecyclerView>
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
