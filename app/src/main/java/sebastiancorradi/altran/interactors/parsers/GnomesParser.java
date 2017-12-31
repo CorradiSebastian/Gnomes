@@ -47,4 +47,13 @@ public class GnomesParser {
 
         return  brastlewark;
     }
+
+    public Gnome parseGnome (String gnomeJSON){
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+
+        Gnome gnome = gson.fromJson(gnomeJSON, Gnome.class);
+
+        return  gnome;
+    }
 }
