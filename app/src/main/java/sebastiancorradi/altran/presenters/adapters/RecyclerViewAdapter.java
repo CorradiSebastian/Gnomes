@@ -78,7 +78,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
 
             @Override
             public void onClick(View view) {
-                //select(paymentMethod);
                 Log.d("ReciclerViewAdapter", "Click");
             }
         });
