@@ -49,7 +49,7 @@ public class AltranDBHelper extends SQLiteOpenHelper implements AltranDBFiledsHe
 
 
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 10;
     public static final String DATABASE_NAME = "altran.db";
 
     private static AltranDBHelper instance;

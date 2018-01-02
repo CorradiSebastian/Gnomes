@@ -3,6 +3,7 @@ package sebastiancorradi.altran.interactors;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -66,8 +67,8 @@ public class DBInteractor {
 
 
 // Insert the new row, returning the primary key value of the new row
-
-        return dbHelper.insert(AltranDBHelper.TABLE_NAME, values);
+        long result = dbHelper.insert(AltranDBHelper.TABLE_NAME, values);
+        return result;
     }
     public long insertOrThrow(Gnome gnome){
 
@@ -85,6 +86,10 @@ public class DBInteractor {
 // Insert the new row, returning the primary key value of the new row
 
         return dbHelper.insertOrThrow(AltranDBHelper.TABLE_NAME, values);
+    }
+
+    public long getGnomesCount(){
+        return DatabaseUtils.queryNumEntries(dbHelper.getReadableDatabase(), AltranDBHelper.TABLE_NAME);
     }
 
     public ArrayList<Gnome> getAll(){
@@ -289,11 +294,10 @@ public class DBInteractor {
         return getCalculatedFloat("height", "max");
     }
 
-
-
     public float getMinHeight(){
         return getCalculatedFloat("height", "min");
     }
+
     public float getMaxWeight(){
         return getCalculatedFloat("weight", "max");
     }
