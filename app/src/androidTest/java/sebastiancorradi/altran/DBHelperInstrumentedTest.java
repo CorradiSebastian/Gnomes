@@ -13,6 +13,8 @@ import org.junit.runner.RunWith;
 
 import sebastiancorradi.altran.SQL.AltranDBHelper;
 import sebastiancorradi.altran.Utils.Utils;
+import sebastiancorradi.altran.model.Gnome;
+import sebastiancorradi.altran.model.InjectableGnomeCreator;
 
 import static org.junit.Assert.*;
 
@@ -47,6 +49,23 @@ public class DBHelperInstrumentedTest {
 
         ContentValues values = new ContentValues();
         values.put(AltranDBHelper.COLUMN_GNOME_ID, numRows + 1);
+
+
+        long inserted = database.insert(AltranDBHelper.TABLE_NAME, values);
+        long newNumRows = DatabaseUtils.queryNumEntries(database.getReadableDatabase(), AltranDBHelper.TABLE_NAME);
+
+        assertEquals("insert not working properly, no records were inserted", 1, newNumRows - numRows);
+        assertEquals("insert not working properly, wrong id", numRows + 1, inserted);
+
+    }
+
+    @Test
+    public void testDbSelect() throws Exception {
+
+        long numRows = DatabaseUtils.queryNumEntries(database.getReadableDatabase(), AltranDBHelper.TABLE_NAME);
+
+        ContentValues values = new ContentValues();
+        values.put(AltranDBHelper.COLUMN_GNOME_ID, numRows + 1);
         values.put(AltranDBHelper.COLUMN_NAME, "Sebastian Corradi");
         values.put(AltranDBHelper.COLUMN_THUMBNAIL, "thumbnail.jpg");
         values.put(AltranDBHelper.COLUMN_AGE, 37);
@@ -56,13 +75,42 @@ public class DBHelperInstrumentedTest {
         values.put(AltranDBHelper.COLUMN_PROFESSIONS, "Developer, Musician");
         values.put(AltranDBHelper.COLUMN_FRIENDS, "Mati, Nacho");
 
-        long inserted = database.insert(AltranDBHelper.TABLE_NAME, values);
-        long newNumRows = DatabaseUtils.queryNumEntries(database.getReadableDatabase(), AltranDBHelper.TABLE_NAME);
+        long newId = database.insert(AltranDBHelper.TABLE_NAME, values);
 
-        assertEquals("insert not working properly, no records were inserted", 1, newNumRows - numRows);
-        assertEquals("insert not working properly, wrong id", numRows + 1, inserted);
+        String[] projection = {
+                AltranDBHelper.COLUMN_GNOME_ID,
+                AltranDBHelper.COLUMN_NAME,
+                AltranDBHelper.COLUMN_THUMBNAIL,
+                AltranDBHelper.COLUMN_AGE,
+                AltranDBHelper.COLUMN_HEIGHT,
+                AltranDBHelper.COLUMN_WEIGHT,
+                AltranDBHelper.COLUMN_HAIRCOLOR,
+                AltranDBHelper.COLUMN_PROFESSIONS,
+                AltranDBHelper.COLUMN_FRIENDS
+        };
 
+        String selection = AltranDBHelper.COLUMN_GNOME_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(newId)};
+
+        String sortOrder = AltranDBHelper.COLUMN_NAME + " ASC";
+
+        Cursor c = database.query(
+                AltranDBHelper.TABLE_NAME,                     // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                sortOrder                                 // The sort order
+        );
+        Gnome gnome = null;
+        if (c.moveToFirst()) {
+            InjectableGnomeCreator creator = new InjectableGnomeCreator();
+            gnome = creator.createFromCursor(c, database);
+        }
+
+        assertEquals("Gnome name not porperly created", gnome.getName(), "Sebastian Corradi");
+        assertEquals("Gnome age not porperly created", gnome.getAge(), 37);
+        String profesions =  Utils.join(", ", gnome.getProfessions());
+        assertEquals("Gnome profesions", profesions, "Developer, Musician");
 
     }
-
 }

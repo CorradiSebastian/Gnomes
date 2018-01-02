@@ -42,6 +42,7 @@ public class Gnome implements Parcelable {
     List<String> friends;
 
     boolean visible = true;
+    private String defaultHairColor = "Pink";
 
     public static final Creator<Gnome> CREATOR = new Creator<Gnome>() {
         @Override
@@ -130,7 +131,8 @@ public class Gnome implements Parcelable {
     }
 
     public void setHair_color(String hair_color) {
-        this.hair_color = hair_color;
+
+        this.hair_color = hair_color.equals("")? defaultHairColor : hair_color;
     }
 
     public List<String> getProfessions() {

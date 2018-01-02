@@ -3,6 +3,7 @@ package sebastiancorradi.altran.interactors;
 import java.util.ArrayList;
 
 import sebastiancorradi.altran.model.Gnome;
+import sebastiancorradi.altran.model.InjectableGnomeCreator;
 import sebastiancorradi.altran.presenters.MainPresenter;
 
 /**
@@ -16,7 +17,7 @@ public class MainInteractor {
 
     public MainInteractor(MainPresenter mainPresenter){
         this.mainPresenter = mainPresenter;
-        dbInteractor = DBInteractor.getInstance(mainPresenter.getContext());
+        dbInteractor = DBInteractor.getInstance(mainPresenter.getContext(), new InjectableGnomeCreator());
 
     }
 
@@ -30,19 +31,19 @@ public class MainInteractor {
     }
 
     public boolean canFilter(){
-        return DBInteractor.getInstance(mainPresenter.getContext()).isDataBaseReady();
+        return DBInteractor.getInstance(mainPresenter.getContext(), new InjectableGnomeCreator()).isDataBaseReady();
     }
 
     public float getMaxHeight(){
-        return DBInteractor.getInstance(mainPresenter.getContext()).getMaxHeight();
+        return DBInteractor.getInstance(mainPresenter.getContext(), new InjectableGnomeCreator()).getMaxHeight();
     }
     public float getMinHeight(){
-        return DBInteractor.getInstance(mainPresenter.getContext()).getMinHeight();
+        return DBInteractor.getInstance(mainPresenter.getContext(), new InjectableGnomeCreator()).getMinHeight();
     }
     public float getMaxWeight(){
-        return DBInteractor.getInstance(mainPresenter.getContext()).getMaxWeight();
+        return DBInteractor.getInstance(mainPresenter.getContext(), new InjectableGnomeCreator()).getMaxWeight();
     }
     public float getMinWeight(){
-        return DBInteractor.getInstance(mainPresenter.getContext()).getMinWeight();
+        return DBInteractor.getInstance(mainPresenter.getContext(), new InjectableGnomeCreator()).getMinWeight();
     }
 }

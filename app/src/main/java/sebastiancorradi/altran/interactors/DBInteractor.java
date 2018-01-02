@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import sebastiancorradi.altran.SQL.AltranDBHelper;
 import sebastiancorradi.altran.Utils.Utils;
 import sebastiancorradi.altran.model.Gnome;
+import sebastiancorradi.altran.model.GnomeCreatorInterface;
 import sebastiancorradi.altran.repository.GnomeRepository;
 
 /**
@@ -20,10 +21,12 @@ public class DBInteractor {
     private AltranDBHelper dbHelper;
     private boolean working = false;
     private GnomeRepository repository;
+    private GnomeCreatorInterface gnomeCreator;
 
-    private DBInteractor(Context context){
+    private DBInteractor(Context context, GnomeCreatorInterface gnomeCreator){
         dbHelper = AltranDBHelper.getInstance(context);
         repository = GnomeRepository.getInstance();
+        this.gnomeCreator = gnomeCreator;
     }
     private static DBInteractor instance;
     String[] projection = {
@@ -38,9 +41,9 @@ public class DBInteractor {
             AltranDBHelper.COLUMN_FRIENDS
     };
 
-    public static DBInteractor getInstance(Context context){
+    public static DBInteractor getInstance(Context context, GnomeCreatorInterface gnomeCreator){
         if (instance == null){
-            instance = new DBInteractor(context);
+            instance = new DBInteractor(context, gnomeCreator);
         }
         return instance;
     }
@@ -67,7 +70,7 @@ public class DBInteractor {
         return dbHelper.insert(AltranDBHelper.TABLE_NAME, values);
     }
     public long insertOrThrow(Gnome gnome){
-// Create a new map of values, where column names are the keys
+
         ContentValues values = new ContentValues();
         values.put(AltranDBHelper.COLUMN_GNOME_ID, gnome.getId());
         values.put(AltranDBHelper.COLUMN_NAME, gnome.getName());
@@ -220,27 +223,8 @@ public class DBInteractor {
     }
 
     public Gnome createFromCursor(Cursor c){
-        Gnome result = new Gnome();
-        result.setId(c.getInt(c.getColumnIndex(AltranDBHelper.COLUMN_GNOME_ID)));
-        result.setName(c.getString(c.getColumnIndex(AltranDBHelper.COLUMN_NAME)));
-        result.setThumbnail(c.getString(c.getColumnIndex(AltranDBHelper.COLUMN_THUMBNAIL)));
-        result.setAge(c.getInt(c.getColumnIndex(AltranDBHelper.COLUMN_AGE)));
-        result.setHeight(c.getFloat(c.getColumnIndex(AltranDBHelper.COLUMN_HEIGHT)));
-        result.setWeight(c.getFloat(c.getColumnIndex(AltranDBHelper.COLUMN_WEIGHT)));
-        result.setHair_color(c.getString(c.getColumnIndex(AltranDBHelper.COLUMN_HAIRCOLOR)));
-        ArrayList<String> professions = new ArrayList<String>();
-        String[] list = c.getString(c.getColumnIndex(AltranDBHelper.COLUMN_PROFESSIONS)).split(AltranDBHelper.COMMA_SEP);
-        for (String s: list){
-            professions.add(s);
-        }
-        result.setProfessions(professions);
+        Gnome result = gnomeCreator.createFromCursor(c, dbHelper);
 
-        ArrayList<String> friends = new ArrayList<String>();
-        String[] array = c.getString(c.getColumnIndex(AltranDBHelper.COLUMN_FRIENDS)).split(AltranDBHelper.COMMA_SEP);
-        for (String s: array){
-            friends.add(s);
-        }
-        result.setFriends(friends);
         return result;
     }
     public int gnomeCount(){

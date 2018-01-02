@@ -12,7 +12,7 @@ import android.util.Log;
  * Created by Gregorio on 12/9/2017.
  */
 
-public class AltranDBHelper extends SQLiteOpenHelper {
+public class AltranDBHelper extends SQLiteOpenHelper implements AltranDBFiledsHelper{
     private static String TAG = "AltranDBHelper";
 
     public static final String TABLE_NAME = "altran";
@@ -27,7 +27,7 @@ public class AltranDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PROFESSIONS = "professions";
     public static final String COLUMN_FRIENDS = "friends";
 
-    private static final String TEXT_TYPE = " TEXT";
+    private static final String TEXT_TYPE = " TEXT NOT NULL DEFAULT ''";
     private static final String INT_TYPE = " INTEGER";
     private static final String REAL_TYPE = " REAL";
     public static final String COMMA_SEP = ", ";
@@ -49,7 +49,7 @@ public class AltranDBHelper extends SQLiteOpenHelper {
 
 
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
     public static final String DATABASE_NAME = "altran.db";
 
     private static AltranDBHelper instance;
@@ -103,4 +103,58 @@ public class AltranDBHelper extends SQLiteOpenHelper {
     }
 
 
+    @Override
+    public String getTableName() {
+        return TABLE_NAME;
+    }
+
+    @Override
+    public String getColumnId() {
+        return TABLE_ID;
+    }
+
+    @Override
+    public String getColumnGnomeId() {
+        return COLUMN_GNOME_ID;
+    }
+
+    @Override
+    public String getColumnName() {
+        return COLUMN_NAME;
+    }
+
+    @Override
+    public String getColumnThumbnail() {
+        return COLUMN_THUMBNAIL;
+    }
+
+    @Override
+    public String getColumnAge() {
+        return COLUMN_AGE;
+    }
+
+    @Override
+    public String getColumnHeight() {
+        return COLUMN_HEIGHT;
+    }
+
+    @Override
+    public String getColumnWeight() {
+        return COLUMN_WEIGHT;
+    }
+
+    @Override
+    public String getColumnHaircolor() {
+        return COLUMN_HAIRCOLOR;
+    }
+
+    @Override
+    public String getColumnProfessions() {
+        return COLUMN_PROFESSIONS;
+    }
+
+    @Override
+    public String getColumnFriends() {
+        return COLUMN_FRIENDS;
+    }
 }
