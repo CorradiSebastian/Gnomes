@@ -39,7 +39,6 @@ public class DBHelperInstrumentedTest {
     public void testDbCreation() throws Exception {
         // Context of the app under test.
         assertNotNull("La base de datos no se creo", database);
-        //assertEquals("sebastiancorradi.altran", appContext.getPackageName());
     }
 
     @Test
